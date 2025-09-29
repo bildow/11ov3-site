@@ -1,0 +1,22 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Node / build artifacts (if you add Tailwind or npm later)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+
+# Env files (if you ever add API keys)
+.env
+.env.local
+
+# Netlify / deploy cache
+.netlify/
+
+# Editor settings
+.vscode/
+.idea/
+*.swp

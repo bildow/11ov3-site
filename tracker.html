@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Shield Against Hunger — Tracker | 11ov3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/app.js"></script>
+  <link rel="icon" href="/assets/favicon.png" sizes="any">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<meta name="theme-color" content="#000000">
+</head>
+<body class="antialiased">
+  <div id="site-header"></div>
+
+<main class="max-w-6xl mx-auto px-4 py-12">
+  <!-- Page header -->
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold">Shield Against Hunger — Tracker</h1>
+    <p class="text-gray-700 mt-2">
+      Counting <strong>pledges</strong> and <strong>signed requests</strong> toward 97 for an Emergency Special Session under Resolution 377.
+    </p>
+  </header>
+
+  <!-- Counter + Latest -->
+  <section class="mb-8 grid gap-6 md:grid-cols-3">
+    <div class="p-5 border rounded">
+      <div class="text-sm text-gray-600">Count toward 97</div>
+      <div id="countBig" class="text-4xl font-bold mt-2">0</div>
+      <div class="text-xs text-gray-500 mt-1">Signed + Publicly Committed</div>
+    </div>
+
+    <div class="md:col-span-2 p-5 border rounded">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Latest pledge</h2>
+        <a href="#pledgeFeed" class="text-sm underline">View all →</a>
+      </div>
+      <div id="latestCard" class="mt-3"></div>
+    </div>
+  </section>
+
+  <!-- Status legend -->
+  <div class="mt-2 mb-6 flex flex-wrap gap-3 text-sm">
+    <span class="px-2 py-1 rounded bg-green-100 text-green-800">Signed</span>
+    <span class="px-2 py-1 rounded bg-yellow-100 text-yellow-800">Publicly Committed</span>
+    <span class="px-2 py-1 rounded bg-blue-100 text-blue-800">In Discussions</span>
+    <span class="px-2 py-1 rounded bg-gray-100 text-gray-800">Silent</span>
+    <span class="px-2 py-1 rounded bg-red-100 text-red-800">Opposing</span>
+  </div>
+
+  <!-- All pledges feed -->
+  <section>
+    <h2 class="text-xl font-semibold mb-4">All pledges & positions</h2>
+    <div id="pledgeFeed" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
+  </section>
+
+  <!-- Submit evidence -->
+  <section class="mt-12 p-5 border rounded">
+    <h2 class="text-xl font-semibold">Submit Evidence</h2>
+    <p class="text-gray-700 mt-2">
+      Found a statement or pledge from a government or UN mission? Share the link to the source.
+    </p>
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe43k8O83ed5sEFOGXzU8awCr9nSzNFb4y_KkKX7xKNzCj0HQ/viewform?usp=dialog"
+            class="w-full h-96 border rounded mt-4"></iframe>
+  </section>
+</main>
+
+  <div id="site-footer"></div>
+
+
+<script>
+  const STATUS_STYLE = {
+    "Signed": "bg-green-100 text-green-800",
+    "Publicly Committed": "bg-yellow-100 text-yellow-800",
+    "In Discussions": "bg-blue-100 text-blue-800",
+    "Silent": "bg-gray-100 text-gray-800",
+    "Opposing": "bg-red-100 text-red-800"
+  };
+
+  // Normalize mixed schemas:
+  // Old: {country,status,source,date_iso,region,notes}
+  // New: {country,leader,date,pledge,source,region}
+  function normalize(item) {
+    const country = item.country || 'Unknown';
+    const leader = item.leader || '';
+    const source = item.source || '';
+    const region = item.region || '';
+    const dateStr = item.date_iso || item.date || '';
+    const date = dateStr ? new Date(dateStr) : null;
+
+    let status = item.status || '';
+    if (!status && item.pledge) status = "In Discussions"; // default inference
+
+    const summary = (item.pledge || item.notes || '').trim();
+
+    return { country, leader, source, region, date, dateStr, status, summary };
+  }
+
+  function fmtDate(d) {
+    if (!d) return '';
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function computeCount(items) {
+    return items.filter(i => i.status === "Signed" || i.status === "Publicly Committed").length;
+  }
+
+  function badge(status) {
+    const cls = STATUS_STYLE[status] || "bg-gray-100 text-gray-800";
+    return status ? `<span class="px-2 py-0.5 rounded text-xs ${cls}">${status}</span>` : '';
+  }
+
+  function latestCardHTML(n) {
+    const lead = n.leader ? ` · <span class="text-gray-600">${n.leader}</span>` : '';
+    const date = n.date ? fmtDate(n.date) : (n.dateStr || '');
+    const excerpt = n.summary ? n.summary.slice(0, 220) + (n.summary.length > 220 ? '…' : '') : 'No summary available.';
+    const src = n.source ? `<a href="${n.source}" target="_blank" rel="noopener" class="underline">Source →</a>` : '';
+    return `
+      <article class="p-4 border rounded">
+        <div class="flex items-center justify-between">
+          <div class="font-semibold">${n.country}${lead}</div>
+          ${badge(n.status)}
+        </div>
+        <div class="text-sm text-gray-600 mt-1">${date}</div>
+        <p class="mt-2 text-sm text-gray-800">${excerpt}</p>
+        <div class="mt-3 text-sm">${src}</div>
+      </article>
+    `;
+  }
+
+  function cardHTML(n) {
+    const lead = n.leader ? ` · <span class="text-gray-600">${n.leader}</span>` : '';
+    const date = n.date ? fmtDate(n.date) : (n.dateStr || '');
+    const src = n.source ? `<a href="${n.source}" target="_blank" rel="noopener" class="underline">Source →</a>` : '';
+    const sum = n.summary ? `<p class="mt-2 text-sm text-gray-800">${n.summary}</p>` : '';
+    return `
+      <article class="p-4 border rounded">
+        <div class="flex items-center justify-between">
+          <div class="font-semibold">${n.country}${lead}</div>
+          ${badge(n.status)}
+        </div>
+        <div class="text-sm text-gray-600 mt-1">${date}</div>
+        ${sum}
+        <div class="mt-3 text-sm">${src}</div>
+      </article>
+    `;
+  }
+
+  async function loadPledges() {
+    try {
+      const res = await fetch('/data/pledges.json', { cache: 'no-cache' });
+      const raw = await res.json();
+      const arr = Array.isArray(raw) ? raw : (raw.items || []);
+
+      const items = arr.map(normalize).sort((a, b) => {
+        if (a.date && b.date) return b.date - a.date;
+        if (a.date) return -1;
+        if (b.date) return 1;
+        return 0;
+      });
+
+      document.getElementById('countBig').textContent = computeCount(items).toString();
+
+      const latest = items.find(i => i.summary || i.status || i.date) || items[0];
+      document.getElementById('latestCard').innerHTML =
+        latest ? latestCardHTML(latest) : '<p>No entries yet.</p>';
+
+      document.getElementById('pledgeFeed').innerHTML =
+        items.map(cardHTML).join('') || '<p>No entries yet.</p>';
+
+    } catch (e) {
+      console.error(e);
+      document.getElementById('latestCard').innerHTML = '<p class="text-red-600">Failed to load latest pledge.</p>';
+      document.getElementById('pledgeFeed').innerHTML = '<p class="text-red-600">Failed to load tracker.</p>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadPledges);
+</script></p>` 
+</body>
+</html>

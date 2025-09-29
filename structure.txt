@@ -1,0 +1,14 @@
+11ov3/
+├─ index.html            (Home)
+├─ road-to-97.html       (Story + How it works + CTAs)
+├─ tracker.html          (Shield Against Hunger – live count + feed)
+├─ artists.html          (Curated gallery + submit form)
+├─ action.html           (Email/Call templates, open letters)
+├─ why.html            (Mission)
+├─ /assets/
+│   ├─ logo.svg
+│   └─ hero.jpg
+├─ /css/
+│   └─ styles.css        (tiny overrides if needed)
+└─ /js/
+    └─ app.js           (header/footer inject, counter, simple fetch)

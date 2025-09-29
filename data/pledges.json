@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "country": "Ireland",
+      "status": "Publicly Committed",
+      "source": "",
+      "date_iso": "2025-09-05"
+    },
+    {
+      "country": "Canada",
+      "status": "In Discussions",
+      "source": "",
+      "date_iso": "2025-09-24"
+    },
+  {
+    "country": "Finland",
+    "leader": "President Alexander Stubb",
+    "status": "In Discussions",
+    "source": "https://singjupost.com/transcript-finlands-president-alexander-stubbs-speech-at-unga-2025/",
+    "date": "2025-09-24",
+    "region": "Europe",
+    "pledge": "Called for agency of all UN member states; urged humanitarian access in Gaza; supported UN reform and international law."
+  },
+  {
+    "country": "Slovenia",
+    "leader": "President Nataša Pirc Musar",
+    "status": "In Discussions",
+    "source": "https://buildingtrust.si/statement/statement-by-the-republic-of-slovenia-at-the-general-debate-of-the-80th-session-of-the-un-general-assembly/",
+    "date": "2025-09-25",
+    "region": "Europe",
+    "pledge": "Proposed a Global Forum for the Future; urged bold UNSC reform; condemned weaponization of hunger; called artists and nations to unite."
+  },
+  {
+    "country": "Indonesia",
+    "leader": "President Prabowo Subianto",
+    "status": "In Discussions",
+    "source": "https://gadebate.un.org/sites/default/files/gastatements/80/id_en.pdf",
+    "date": "2025-09-23",
+    "region": "Asia-Pacific",
+    "pledge": "Offered deployment of 20,000 peacekeepers for Gaza or elsewhere in Palestine; exported rice to Palestine; reaffirmed Two-State Solution."
+  }
+
+  ]
+}

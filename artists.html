@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Artists’ Gallery — Shield Against Hunger | 11ov3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/app.js"></script>
+  <link rel="icon" href="/assets/favicon.png" sizes="any">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<meta name="theme-color" content="#000000">
+
+</head>
+<script>
+  async function loadArtists() {
+    try {
+      const res = await fetch('/data/artists.json');
+      const items = await res.json();
+      const el = document.getElementById('gallery');
+      el.innerHTML = items.map(item => `
+        <a class="group block rounded overflow-hidden border bg-white" href="${item.url || '#'}" target="${item.url ? '_blank' : '_self'}" rel="noopener">
+          <div class="aspect-square bg-gray-100 overflow-hidden">
+            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition">
+          </div>
+          <div class="p-3">
+            <div class="font-semibold text-sm">${item.title}</div>
+            <div class="text-xs text-gray-600">${item.artist}${item.country ? ' · ' + item.country : ''}</div>
+          </div>
+        </a>
+      `).join('') || '<p class="text-gray-600">Coming soon.</p>';
+    } catch {
+      document.getElementById('gallery').innerHTML = '<p class="text-red-600">Failed to load gallery.</p>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadArtists);
+</script>
+
+<body class="antialiased">
+  <div id="site-header"></div>
+
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold">Artists’ Gallery</h1>
+    <p class="mt-3 text-gray-700 max-w-3xl">
+      Artists from around the world tie their people’s scars — famine, exile, empire — to the hunger we see now. This is the living gallery of the Shield Against Hunger.
+    </p>
+
+    <div id="gallery" class="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <!-- Curated items -->
+      <!-- <a href="#" class="block aspect-square bg-gray-100 rounded"></a> -->
+    </div>
+
+    <section id="submit" class="mt-12 p-5 border rounded">
+      <h2 class="text-xl font-semibold">Submit Your Work</h2>
+      <p class="text-gray-700 mt-2">Share a poem, image, video, or song. Include a short note linking your nation’s history to the present hunger.</p>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdO2eo64chO0sg6j-cnxZ3sfzmZERjbsAgmvaReD6OuWoKCkg/viewform?usp=dialog" class="w-full h-96 border rounded mt-4"></iframe>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>

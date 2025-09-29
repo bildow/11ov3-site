@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Road to 97 — Uniting for Peace | 11ov3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/app.js"></script>
+  <link rel="icon" href="/assets/favicon.png" sizes="any">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<meta name="theme-color" content="#000000">
+
+</head>
+<body class="antialiased">
+  <div id="site-header"></div>
+
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <h1 class="text-3xl md:text-4xl font-bold">Road to 97</h1>
+    <p class="mt-3 text-gray-700 max-w-3xl">
+      When the Security Council is blocked by veto, Resolution 377 — <em>Uniting for Peace</em> — lets the General Assembly act. If <strong>97 countries</strong> request it, an <strong>Emergency Special Session</strong> must be convened within 24 hours.
+    </p>
+
+    <!-- Infographic blocks -->
+    <section class="mt-10 grid md:grid-cols-4 gap-6">
+      <div class="p-5 border rounded">
+        <div class="text-sm font-semibold">1. Veto → Deadlock</div>
+        <p class="text-sm text-gray-700 mt-2">Recent Gaza aid resolutions were vetoed: the textbook definition of deadlock.</p>
+      </div>
+      <div class="p-5 border rounded">
+        <div class="text-sm font-semibold">2. Resolution 377</div>
+        <p class="text-sm text-gray-700 mt-2"><em>Uniting for Peace</em> moves action to the General Assembly when the Council fails.</p>
+      </div>
+      <div class="p-5 border rounded">
+        <div class="text-sm font-semibold">3. 97 Requests</div>
+        <p class="text-sm text-gray-700 mt-2">A majority of Member States request an Emergency Special Session.</p>
+      </div>
+      <div class="p-5 border rounded">
+        <div class="text-sm font-semibold">4. ESS in 24h</div>
+        <p class="text-sm text-gray-700 mt-2">The Assembly convenes; humanitarian corridors and funding can be authorized.</p>
+      </div>
+    </section>
+
+    <!-- Shield section -->
+    <section class="mt-12">
+      <h2 class="text-2xl font-semibold">The Shield Against Hunger</h2>
+      <p class="mt-2 text-gray-700 max-w-3xl">
+        Imagine if Canada, Ireland, and Scotland stirred their peoples and moved even the UK toward conscience. Imagine if the Nordics, the Benelux, and Poland dared to form a shield — not of iron or wealth alone, but of will, of aid, of promises kept to the children.
+      </p>
+    </section>
+
+    <!-- Tracker preview -->
+    <section class="mt-12 p-5 border rounded">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-sm font-semibold">Current Count</div>
+          <div class="text-3xl font-bold"><span id="count">0</span> / 97</div>
+        </div>
+        <a href="/tracker.html" class="px-4 py-2 rounded bg-black text-white">View Full Tracker</a>
+      </div>
+      <p class="mt-3 text-sm text-gray-600">Counts pledges & signed requests with public sources. Submit evidence on the tracker page.</p>
+    </section>
+
+    <!-- Action tiles -->
+    <section class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <a href="/action.html#email" class="p-5 border rounded hover:bg-gray-50">
+        <div class="font-semibold mb-2">Email Your Ambassador</div>
+        <p class="text-sm text-gray-700">Template letter & addresses.</p>
+      </a>
+      <a href="/action.html#call" class="p-5 border rounded hover:bg-gray-50">
+        <div class="font-semibold mb-2">Call Your MP / FM</div>
+        <p class="text-sm text-gray-700">Short, clear script.</p>
+      </a>
+      <a href="/action.html#faith-youth" class="p-5 border rounded hover:bg-gray-50">
+        <div class="font-semibold mb-2">Faith & Youth Letter</div>
+        <p class="text-sm text-gray-700">Open letter for signatures.</p>
+      </a>
+      <a href="/artists.html#submit" class="p-5 border rounded hover:bg-gray-50">
+        <div class="font-semibold mb-2">Artists’ Brief</div>
+        <p class="text-sm text-gray-700">Submit work for the gallery.</p>
+      </a>
+    </section>
+
+    <section class="mt-12">
+      <p class="italic text-gray-800 font-medium">“May we draw our shield as a sword against those who would deny any child the right to be fed.”</p>
+	  <p class="italic text-gray-800 font-medium">“Hunger is now being weaponized — turned into a tool of war… We cannot allow this to happen any longer.”</p> — President Nataša Pirc Musar, UNGA 80 (Sept 24, 2025)
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script>
+    // Placeholder: initialize count manually for now, or fetch from a JSON/Sheet
+    document.getElementById('count').textContent = '0'; // update as you verify pledges
+  </script>
+</body>
+</html>

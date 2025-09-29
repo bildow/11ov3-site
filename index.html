@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>11ov3 — Road to 97 | Uniting for Peace</title>
+  <meta name="description" content="11ov3 seeks to lobby leaders at the UN with an actionable plan to end weaponized hunger in conflict zones.">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="They blocked the gate. We built the bridge. Road to 97 under UN Resolution 377 — Uniting for Peace.">
+  <!-- Open Graph (Facebook, LinkedIn, etc.) -->
+<meta property="og:title" content="They blocked the gate. We built the bridge.">
+<meta property="og:description" content="11ov3 seeks to lobby leaders at the UN with an actionable plan to end weaponized hunger in conflict zones.">
+<meta property="og:image" content="https://11ov3.com/assets/social-banner.png">
+<meta property="og:url" content="https://11ov3.com/">
+<meta property="og:type" content="website">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="They blocked the gate. We built the bridge.">
+<meta name="twitter:description" content="11ov3 seeks to lobby leaders at the UN with an actionable plan to end weaponized hunger in conflict zones.">
+<meta name="twitter:image" content="https://11ov3.com/assets/social-banner.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script defer src="/js/app.js"></script>
+  <link rel="icon" href="/assets/favicon.png" sizes="any">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
+<meta name="theme-color" content="#000000">
+</head>
+<body class="antialiased text-gray-900">
+  <div id="site-header"></div>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <img src="/assets/hero.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-25">
+    <div class="relative max-w-6xl mx-auto px-4 py-24 md:py-32">
+      <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+        They blocked the gate. <br class="hidden md:block">We built the bridge.
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg md:text-xl text-gray-700">
+        Gaza aid vetoes created Security Council deadlock. Under Resolution 377 —
+        <em>Uniting for Peace</em> — <strong>97 nations</strong> can convene an Emergency Special Session to open corridors and end famine as a weapon of war.
+      </p>
+      <div class="mt-8 flex items-center gap-3">
+        <a href="/road-to-97.html" class="px-5 py-3 rounded bg-black text-white">See the Road to 97</a>
+        <a href="/donate/" class="px-5 py-3 rounded border">Donate to Feed Now</a>
+      </div>
+    </div>
+  </section>
+<!-- Civitasvox teaser -->
+<section class="max-w-4xl mx-auto px-4 py-12">
+  <h2 class="text-2xl font-bold">What is Civitasvox?</h2>
+  <p class="mt-3 text-gray-700 text-lg">
+    A stream, a myth, a living story. Civitasvox weaves poetry and philosophy into action —
+    calling the world to feed children caught in conflict. 
+    Imagination alone is not enough, but without imagination, no action holds.
+  </p>
+  <div class="mt-5">
+    <a href="/civitasvox/" 
+       class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-blue-700 text-white hover:bg-blue-800">
+      Learn More →
+    </a>
+  </div>
+</section>
+  <!-- Mid split -->
+  <section class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-10">
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Antidote to Shocking Cruelty</h2>
+      <p class="text-gray-700">Cruelty is no accident of war — it is chosen, sharpened, wielded. From Sudan to Gaza, from Congo to Somaliland, the same hand turns food into a weapon. Against such shocking cruelty, there must be an antidote.</p>
+      <a href="/road-to-97.html" class="mt-4 inline-block text-black underline">Read the plan →</a>
+    </div>
+    <div>
+      <h2 class="text-2xl font-semibold mb-3">Feel Helpless No More</h2>
+      <p class="text-gray-700">Resolution 377 gives us the path: if 97 nations request it, the General Assembly must convene within 24 hours. This is the Road to 97 — a shield against hunger, built in public.</p>
+      <a href="/road-to-97.html" class="mt-4 inline-block text-black underline">See how it works →</a>
+    </div>
+  </section>
+
+  <!-- Artists teaser -->
+<section class="bg-gray-50">
+  <div class="max-w-6xl mx-auto px-4 py-16">
+    <h2 class="text-2xl font-semibold mb-6">Artists for the Shield</h2>
+    <div id="artistsTeaser" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+    <a href="/artists.html" class="mt-6 inline-block px-4 py-2 border rounded">See the Gallery</a>
+  </div>
+</section>
+<script>
+  async function loadArtistsTeaser(){
+    try{
+      const res = await fetch('/data/artists.json');
+      const items = (await res.json()).slice(0,4);
+      const el = document.getElementById('artistsTeaser');
+      el.innerHTML = items.map(it => `
+        <a href="${it.pdf || it.url || '/artists.html'}" target="${it.pdf || it.url ? '_blank' : '_self'}"
+           class="block rounded overflow-hidden border bg-white">
+          <div class="aspect-square bg-gray-100 overflow-hidden">
+            <img src="${it.image}" alt="${it.title}" class="w-full h-full object-cover">
+          </div>
+          <div class="p-2">
+            <div class="text-sm font-semibold truncate">${it.title}</div>
+            <div class="text-xs text-gray-600 truncate">${it.artist || ''}</div>
+          </div>
+        </a>
+      `).join('') || '<p class="text-gray-600">Coming soon.</p>';
+    }catch{
+      document.getElementById('artistsTeaser').innerHTML = '<p class="text-red-600">Failed to load.</p>';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadArtistsTeaser);
+</script>
+  <!-- Donate anchor -->
+  <section id="donate" class="max-w-6xl mx-auto px-4 py-16">
+    <h2 class="text-2xl font-semibold mb-3">Donate to Feed Now</h2>
+    <p class="text-gray-700 mb-4">Immediate hunger relief while we build the shield. 100% to vetted food programs.</p>
+  </section>
+
+  <div id="site-footer"></div>
+</body>
+</html>
