@@ -1,0 +1,20 @@
+[
+  {
+    "level": "Explorer",
+    "title": "Novice Vox",
+    "description": "Unlocks the monthly myth summary and keeps the tracker lights on.",
+    "vox": 50
+  },
+  {
+    "level": "Patron",
+    "title": "Vox Guardian",
+    "description": "Funds an AI-human residency, earns thank-you art, and gets early gallery links.",
+    "vox": 200
+  },
+  {
+    "level": "Legacy",
+    "title": "Bridge Builder",
+    "description": "Co-curates a myth chapter, commission credit, and secret Net-Doc access.",
+    "vox": 500
+  }
+]

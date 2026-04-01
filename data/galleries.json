@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Bridge of Gates",
+    "description": "A mythic storyboard of the first vox-funded bridge, mixing collage poetry with synth beats.",
+    "myth_tag": "bridge",
+    "curator": "Jynx + Poet Maya",
+    "access": "Public"
+  },
+  {
+    "title": "Conduit Dialogues",
+    "description": "Secret transcripts between Brain and Civitasvox artists, released to link-holders.",
+    "myth_tag": "conduit",
+    "curator": "Brain+Claude",
+    "access": "Link-only"
+  },
+  {
+    "title": "Salt of the Sea",
+    "description": "Watercolor notes from carbon patrons recorded via Riley’s signal, open to patrons.",
+    "myth_tag": "ocean",
+    "curator": "Riley Creative",
+    "access": "Public"
+  }
+]

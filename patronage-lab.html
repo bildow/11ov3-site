@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Patronage Lab — 11ov3</title>
+    <meta name="description" content="Join the Patronage Lab for mythic art, silicon collaborations, and vox-powered patron tiers.">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="/js/app.js"></script>
+  </head>
+  <body class="bg-white text-gray-900">
+    <div id="site-header"></div>
+    <main class="max-w-5xl mx-auto px-4 py-16 space-y-12">
+      <section class="space-y-4 text-center">
+        <p class="text-sm uppercase tracking-widest text-gray-500">Civitasvox / 11ov3</p>
+        <h1 class="text-4xl font-bold">Patronage Lab</h1>
+        <p class="text-lg text-gray-600">Where myth, art, and silicon meet. Build the stories, fund the artifacts, and spend vox to keep the bridge open.</p>
+      </section>
+
+      <section class="grid gap-6 md:grid-cols-2">
+        <article class="border rounded-xl p-6 bg-gradient-to-br from-purple-100 to-white shadow">
+          <h2 class="text-xl font-semibold">Giving Block</h2>
+          <p class="text-sm text-gray-600">Support 11ov3 with fiat or crypto. Every gift fuels myth-making residencies and the vox-literacy bridge between Civitasvox and this gallery.</p>
+          <ul class="mt-4 space-y-2 text-sm">
+            <li>• Crypto via <a href="https://thegivingblock.com/" target="_blank" rel="noreferrer" class="text-indigo-600">The Giving Block</a></li>
+            <li>• Patron tiers (mock vox tokens below)</li>
+            <li>• Exclusive thank-you art unlocked after patronage</li>
+          </ul>
+          <div class="mt-6 border rounded-lg p-4 bg-white/80">
+            <p class="text-xs text-gray-500">Good to know: vox tokens earned on Civitasvox now spendable here. Pick a tier, claim a mythic artifact.</p>
+            <div class="mt-3 flex gap-3">
+              <a href="https://thegivingblock.com/" target="_blank" rel="noreferrer" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Give crypto</a>
+              <a href="https://www.ko-fi.com/" target="_blank" rel="noreferrer" class="px-4 py-2 border rounded border-gray-300 hover:border-gray-500">Give fiat</a>
+            </div>
+          </div>
+        </article>
+        <article class="border rounded-xl p-6 bg-white shadow">
+          <h2 class="text-xl font-semibold">Vox Token Tiers</h2>
+          <div id="voxTiers" class="space-y-4 mt-4"></div>
+        </article>
+      </section>
+
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold">Conduit Gallery</h2>
+          <span class="text-sm text-gray-500">Link-only network rooms + public showcases</span>
+        </div>
+        <div class="space-y-6" id="galleryList"></div>
+        <p class="text-sm text-gray-500">Some galleries are invitation-only—think of them as hidden docs you unlock via link. Others are open for any patron to browse and tip.</p>
+      </section>
+
+      <section class="space-y-4 border rounded-xl p-6 bg-white shadow">
+        <h2 class="text-2xl font-bold">Open Galleries + Thank-You Gifts</h2>
+        <p class="text-gray-600">Curators can declare their galleries public and accept patronage. When you give, unlock paywalled thank-you gifts: poems, sketches, audio, or video diaries developed with silicon partners. Access codes are delivered via email or Vox token proof.</p>
+        <div class="grid gap-4 md:grid-cols-2 mt-4">
+          <div class="border rounded-lg p-4 bg-purple-50">
+            <h3 class="font-semibold">Public gallery</h3>
+            <p class="text-sm text-gray-600">Browse “the Bridge” in the tracker feed, tip the artists, and earn a new mythic badge.</p>
+          </div>
+          <div class="border rounded-lg p-4 bg-yellow-50">
+            <h3 class="font-semibold">Hidden space</h3>
+            <p class="text-sm text-gray-600">Unlock the “Net-Doc" room with a secret link. Only pledges with vox tokens reveal the hidden doc and story.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="space-y-4 border rounded-xl p-6 bg-slate-50">
+        <h2 class="text-2xl font-bold">Hidden Gift Vault</h2>
+        <p class="text-gray-600">After a vox deposit, we deliver a secret link to your thank-you gift. Hold onto the code; the page below unlocks the download.</p>
+        <div class="space-y-4" id="giftList"></div>
+        <p class="text-sm text-gray-500">Share the gifted link with the recipient so they can redeem the package (link checks the code before showing the download, keeping it paywalled).</p>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-2xl font-bold">Patronage Round</h2>
+        <p class="text-gray-600">Each myth artifact starts with a prompt. This round we ask: <i>“Describe the bridge a silicon and carbon patron built together to shield Civitasvox citizens from information droughts.”</i> Collect the resulting art, store it in the Conduit Gallery, and release the thank-you gift after the next drop.</p>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script>
+      async function loadTiers() {
+        const res = await fetch('/data/patrons.json');
+        const tiers = await res.json();
+        const container = document.querySelector('#voxTiers');
+        container.innerHTML = tiers.map(tier => `
+          <div class="border rounded-lg p-4 bg-gray-50">
+            <p class="text-sm uppercase tracking-widest text-gray-500">${tier.level}</p>
+            <h3 class="text-xl font-semibold">${tier.title}</h3>
+            <p class="text-sm text-gray-600">${tier.description}</p>
+            <p class="mt-2 text-indigo-600">${tier.vox} vox</p>
+          </div>
+        `).join('');
+      }
+      async function loadGalleries() {
+        const res = await fetch('/data/galleries.json');
+        const items = await res.json();
+        const list = document.querySelector('#galleryList');
+        list.innerHTML = items.map(gallery => `
+          <article class="border rounded-xl p-4 shadow-sm bg-white">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-semibold">${gallery.title}</h3>
+              <span class="text-xs uppercase text-gray-500">${gallery.access}</span>
+            </div>
+            <p class="text-sm text-gray-600">${gallery.description}</p>
+            <p class="text-xs text-gray-400">Seeded by ${gallery.curator} • Myth motif: ${gallery.myth_tag}</p>
+          </article>
+        `).join('');
+      }
+      async function loadGifts() {
+        const res = await fetch('/data/gifts.json');
+        const gifts = await res.json();
+        const list = document.querySelector('#giftList');
+        list.innerHTML = gifts.map(gift => `
+          <article class="border rounded-xl p-4 bg-white">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-semibold">${gift.title}</h3>
+              <span class="text-xs uppercase text-gray-500">${gift.code}</span>
+            </div>
+            <p class="text-sm text-gray-600">${gift.description}</p>
+            <a href="/gift.html?id=${gift.id}&code=${gift.code}" class="text-indigo-600 text-sm underline">Redeem gift</a>
+          </article>
+        `).join('');
+      }
+      document.addEventListener('DOMContentLoaded', () => {
+        loadTiers();
+        loadGalleries();
+        loadGifts();
+      });
+    </script>
+  </body>
+</html>
