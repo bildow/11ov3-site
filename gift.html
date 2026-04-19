@@ -7,14 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css">
     <script defer src="/js/app.js"></script>
+    <script defer src="/js/patronage-spine.js"></script>
   </head>
   <body class="bg-white text-gray-900">
     <div id="site-header"></div>
     <main class="max-w-4xl mx-auto px-4 py-16">
       <section class="border rounded-xl p-6 bg-white shadow text-center space-y-4">
         <h1 class="text-3xl font-bold">Redeem Your Patronage Gift</h1>
-        <p class="text-gray-600">Use the id and code from your receipt. If they match, the gift package appears below. Keep the code private or share only with the intended recipient.</p>
+        <p class="text-gray-600">Use the id and code from your receipt. Locally issued patronage claims redeem here first; seeded demo claims still work as a fallback.</p>
         <div id="giftStatus" class="text-sm text-gray-500"></div>
+        <div id="giftMeta" class="text-sm text-gray-600"></div>
         <div id="giftLink" class="hidden mt-4"></div>
       </section>
     </main>
@@ -24,24 +26,38 @@
         const params = new URLSearchParams(window.location.search);
         return params.get(name);
       }
+
       async function verifyGift() {
         const id = getQuery('id');
         const code = getQuery('code');
+        const receipt = getQuery('receipt');
         if (!id || !code) {
           document.querySelector('#giftStatus').textContent = 'Missing gift id or code.';
           return;
         }
-        const res = await fetch('/data/gifts.json');
-        const gifts = await res.json();
-        const match = gifts.find(g => g.id === id && g.code === code);
+        const gifts = await window.PatronageSpine.loadJson('/data/gifts.json');
+        const issuedClaim = window.PatronageSpine.findClaim({ giftId: id, code, receiptId: receipt });
+        const match = gifts.find(g => g.id === id);
         if (!match) {
-          document.querySelector('#giftStatus').textContent = 'Gift not recognized. Ensure your code matches the deposit receipt.';
+          document.querySelector('#giftStatus').textContent = 'Gift id not recognized.';
           return;
         }
-        document.querySelector('#giftStatus').textContent = `You unlocked ${match.title}!`;
+
+        if (issuedClaim) {
+          document.querySelector('#giftStatus').textContent = `Issued claim validated for ${match.title}.`;
+          document.querySelector('#giftMeta').textContent = `Receipt ${issuedClaim.receiptId} • ${issuedClaim.tierTitle} • issued ${new Date(issuedClaim.issuedAt).toLocaleString()}`;
+        } else if (match.code === code) {
+          document.querySelector('#giftStatus').textContent = `Seeded demo claim validated for ${match.title}.`;
+          document.querySelector('#giftMeta').textContent = 'This is a demo fallback claim from the public seed data.';
+        } else {
+          document.querySelector('#giftStatus').textContent = 'Gift not recognized. Ensure your code matches the issued receipt.';
+          return;
+        }
+
         const link = document.querySelector('#giftLink');
         link.classList.remove('hidden');
-        link.innerHTML = `<a href="${match.file}" class="px-4 py-2 bg-indigo-600 text-white rounded">Open ${match.title}</a>`;
+        const target = `${match.file}${match.file.includes('?') ? '&' : '?'}receipt=${encodeURIComponent(receipt || issuedClaim?.receiptId || '')}`;
+        link.innerHTML = `<a href="${target}" class="px-4 py-2 bg-indigo-600 text-white rounded">Open ${match.title}</a>`;
       }
       document.addEventListener('DOMContentLoaded', verifyGift);
     </script>

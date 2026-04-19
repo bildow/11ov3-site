@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>Donate — 11ov3</title>
-  <meta name="description" content="Donate page for 11ov3. Current branch is in setup while direct routing and patronage unlock flows are being finalized.">
+  <meta name="description" content="Prototype patronage checkout for 11ov3: choose a tier, issue a receipt, and generate a redeemable claim link for a thank-you gift.">
   <!-- Open Graph (Facebook, LinkedIn, etc.) -->
 <meta property="og:title" content="Donate with 11ov3">
-<meta property="og:description" content="Current branch is in setup while direct routing and patronage unlock flows are being finalized.">
+<meta property="og:description" content="Choose a tier, issue a receipt, and generate a redeemable claim link for a thank-you gift.">
 <meta property="og:image" content="https://11ov3.com/assets/social-banner.png">
 <meta property="og:url" content="https://11ov3.com/">
 <meta property="og:type" content="website">
@@ -14,78 +14,236 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Donate with 11ov3">
-<meta name="twitter:description" content="Current branch is in setup while direct routing and patronage unlock flows are being finalized.">
+<meta name="twitter:description" content="Choose a tier, issue a receipt, and generate a redeemable claim link for a thank-you gift.">
 <meta name="twitter:image" content="https://11ov3.com/assets/social-banner.png">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/styles.css">
   <script defer src="/js/app.js"></script>
+  <script defer src="/js/patronage-spine.js"></script>
 </head>
 <body class="antialiased text-gray-900">
   <div id="site-header"></div>
 
-  <main class="max-w-4xl mx-auto px-4 py-12">
+  <main class="max-w-5xl mx-auto px-4 py-12 space-y-10">
     <header class="mb-10">
       <h1 class="text-3xl md:text-4xl font-bold">Donate to Feed Now</h1>
       <p class="mt-3 text-lg text-gray-700 max-w-2xl">
         Immediate hunger relief while we build the Shield Against Hunger.
-        <span class="font-medium">11ov3 takes no fees</span> — donation routing is being finalized in the current patronage build.
+        <span class="font-medium">11ov3 takes no fees</span> — this page now prototypes the patronage spine from pledge to issued receipt and claim link.
       </p>
     </header>
 
-    <section class="p-5 border rounded-lg bg-amber-50 border-amber-200">
-      <h2 class="text-xl font-semibold">Donation Routing In Setup</h2>
-      <p class="mt-2 text-gray-700">
-        This page is being canonized as part of task 238. The final direct-to-charity and patronage unlock paths are tracked in the next build slice,
-        so this branch now states that honestly instead of presenting dead checkout buttons.
-      </p>
-      <div class="mt-4 flex flex-col sm:flex-row gap-3">
-        <a href="/patronage-lab.html" class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-blue-700 text-white hover:bg-blue-800">
-          Open Patronage Lab
-        </a>
-        <a href="https://thegivingblock.com/" target="_blank" rel="noopener"
-           class="inline-flex items-center justify-center px-5 py-3 rounded-lg border hover:bg-gray-50">
-          View The Giving Block
-        </a>
-      </div>
-    </section>
+    <section class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+      <section class="border rounded-2xl p-6 bg-white shadow-sm">
+        <div class="space-y-2">
+          <p class="text-sm uppercase tracking-widest text-indigo-600">Phase Slice</p>
+          <h2 class="text-2xl font-semibold">Prototype Patronage Checkout</h2>
+          <p class="text-gray-600">Choose a tier, assign a thank-you gift, and issue a redeemable claim link on this device. This is the first live prototype of the donation spine.</p>
+        </div>
 
-    <section class="grid gap-5 md:grid-cols-2 mt-8">
-      <div class="p-5 border rounded-lg">
-        <h2 class="text-xl font-semibold">PayPal Giving Fund</h2>
-        <p class="mt-2 text-gray-700">Partner-specific routing not configured on this branch yet.</p>
-        <p class="mt-4 text-sm text-gray-500">Final destination pending the donation spine build.</p>
-      </div>
+        <form id="patronageForm" class="mt-6 space-y-6">
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Supporter name</span>
+              <input id="supporterName" name="supporterName" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Bridge Builder" required>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Email for receipt</span>
+              <input id="supporterEmail" name="supporterEmail" type="email" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="builder@example.com" required>
+            </label>
+          </div>
 
-      <div class="p-5 border rounded-lg">
-        <h2 class="text-xl font-semibold">Credit or Debit Card</h2>
-        <p class="mt-2 text-gray-700">Card checkout is intentionally not wired until the real receipt and unlock flow lands.</p>
-        <p class="mt-4 text-sm text-gray-500">Tracked for the donation spine task.</p>
-      </div>
-    </section>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium text-gray-700">Pick a patron tier</span>
+              <span class="text-xs text-gray-500">Tier data loads from `/data/patrons.json`</span>
+            </div>
+            <div id="tierOptions" class="mt-3 grid gap-3"></div>
+          </div>
 
-    <section class="mt-8 p-5 border rounded-lg">
-      <h2 class="text-xl font-semibold">Crypto Donations</h2>
-      <p class="mt-2 text-gray-700">Support through crypto via partner charities while the integrated donation spine is still in build.</p>
-      <div class="mt-4 flex flex-col sm:flex-row gap-3">
-        <a href="https://thegivingblock.com/" target="_blank" rel="noopener"
-           class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
-          Visit The Giving Block
-        </a>
-      </div>
-      <p class="mt-2 text-xs text-gray-500">Crypto receipt and tax rules depend on the partner and country.</p>
-    </section>
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Thank-you gift</span>
+              <select id="giftSelect" name="giftSelect" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"></select>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Support channel</span>
+              <select id="paymentMethod" name="paymentMethod" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+                <option value="vox-pledge">Vox pledge</option>
+                <option value="crypto-intent">Crypto intent</option>
+                <option value="fiat-intent">Fiat intent</option>
+              </select>
+            </label>
+          </div>
 
-    <section class="mt-10">
-      <h3 class="text-lg font-semibold">Why these options?</h3>
-      <ul class="mt-3 list-disc pl-5 text-gray-700 space-y-1">
-        <li>Direct links to established charities for speed and accountability.</li>
-        <li>No platform fees taken by 11ov3; funds go straight to relief.</li>
-        <li>Multiple methods so anyone, anywhere can give.</li>
-      </ul>
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Support amount</span>
+              <input id="supportAmount" name="supportAmount" type="number" min="1" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="200">
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-gray-700">Internal note</span>
+              <input id="supportNote" name="supportNote" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Residency drop / gallery unlock">
+            </label>
+          </div>
+
+          <button class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white hover:bg-indigo-700" type="submit">
+            Issue receipt and claim link
+          </button>
+        </form>
+      </section>
+
+      <aside class="space-y-6">
+        <section class="border rounded-2xl p-6 bg-slate-50">
+          <h2 class="text-xl font-semibold">What this phase proves</h2>
+          <ul class="mt-4 space-y-2 text-sm text-gray-700">
+            <li>Tier selection is real and data-backed.</li>
+            <li>A support receipt is issued with a unique receipt id.</li>
+            <li>A claim code is generated and tied to a chosen gift.</li>
+            <li>`/gift.html` can redeem locally issued claims on this browser.</li>
+          </ul>
+        </section>
+
+        <section id="receiptPanel" class="hidden border rounded-2xl p-6 bg-emerald-50 border-emerald-200">
+          <p class="text-sm uppercase tracking-widest text-emerald-700">Receipt issued</p>
+          <h2 class="mt-2 text-2xl font-semibold">Patronage receipt ready</h2>
+          <div id="receiptSummary" class="mt-4 space-y-2 text-sm text-gray-800"></div>
+          <div class="mt-4 flex flex-col gap-3">
+            <a id="claimLink" class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-4 py-3 text-white hover:bg-emerald-800" href="#">Open claim link</a>
+            <button id="copyClaimLink" class="inline-flex items-center justify-center rounded-lg border border-emerald-300 px-4 py-3 text-emerald-900 hover:bg-emerald-100" type="button">Copy claim URL</button>
+            <p id="copyStatus" class="text-xs text-emerald-900"></p>
+          </div>
+        </section>
+
+        <section class="border rounded-2xl p-6 bg-white shadow-sm">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold">Recent issued receipts</h2>
+            <button id="clearReceipts" class="text-sm text-gray-500 underline" type="button">Clear local history</button>
+          </div>
+          <div id="receiptHistory" class="mt-4 space-y-3 text-sm text-gray-700"></div>
+        </section>
+      </aside>
     </section>
   </main>
 
   <div id="site-footer"></div>
+  <script>
+    async function loadDonationData() {
+      const [tiers, gifts] = await Promise.all([
+        window.PatronageSpine.loadJson('/data/patrons.json'),
+        window.PatronageSpine.loadJson('/data/gifts.json')
+      ]);
+      return { tiers, gifts };
+    }
+
+    function formatDate(value) {
+      return new Date(value).toLocaleString();
+    }
+
+    function renderTierOptions(tiers) {
+      const container = document.querySelector('#tierOptions');
+      container.innerHTML = tiers.map((tier, index) => `
+        <label class="block rounded-xl border border-gray-200 p-4 hover:border-indigo-400">
+          <input class="mr-3" type="radio" name="tierChoice" value="${tier.title}" ${index === 0 ? 'checked' : ''}>
+          <span class="font-semibold">${tier.title}</span>
+          <span class="ml-2 text-sm text-gray-500">${tier.level}</span>
+          <p class="mt-2 text-sm text-gray-600">${tier.description}</p>
+          <p class="mt-2 text-sm text-indigo-600">${tier.vox} vox</p>
+        </label>
+      `).join('');
+    }
+
+    function renderGiftOptions(gifts) {
+      const select = document.querySelector('#giftSelect');
+      select.innerHTML = gifts.map((gift) => `
+        <option value="${gift.id}">${gift.title}</option>
+      `).join('');
+    }
+
+    function findSelectedTier(tiers) {
+      const selected = document.querySelector('input[name="tierChoice"]:checked');
+      return tiers.find((tier) => tier.title === selected.value);
+    }
+
+    function renderReceiptHistory() {
+      const list = document.querySelector('#receiptHistory');
+      const receipts = window.PatronageSpine.getReceipts();
+      if (!receipts.length) {
+        list.innerHTML = '<p class="text-gray-500">No receipts issued on this browser yet.</p>';
+        return;
+      }
+      list.innerHTML = receipts.map((receipt) => `
+        <article class="rounded-xl border border-gray-200 p-4">
+          <p class="font-medium">${receipt.supporterName} • ${receipt.tier.title}</p>
+          <p class="text-gray-500">${formatDate(receipt.createdAt)} • ${receipt.paymentMethod}</p>
+          <p class="mt-1">${receipt.gift.title} • receipt <code>${receipt.receiptId}</code></p>
+          <a class="mt-2 inline-flex text-indigo-600 underline" href="/gift.html?id=${receipt.gift.id}&code=${receipt.claim.code}&receipt=${receipt.receiptId}">Open claim</a>
+        </article>
+      `).join('');
+    }
+
+    function showReceipt(record) {
+      const panel = document.querySelector('#receiptPanel');
+      const summary = document.querySelector('#receiptSummary');
+      const claimUrl = `/gift.html?id=${record.gift.id}&code=${record.claim.code}&receipt=${record.receiptId}`;
+      panel.classList.remove('hidden');
+      summary.innerHTML = `
+        <p><strong>Supporter:</strong> ${record.supporterName}</p>
+        <p><strong>Tier:</strong> ${record.tier.title} (${record.tier.vox} vox)</p>
+        <p><strong>Gift:</strong> ${record.gift.title}</p>
+        <p><strong>Receipt:</strong> <code>${record.receiptId}</code></p>
+        <p><strong>Claim code:</strong> <code>${record.claim.code}</code></p>
+      `;
+      const link = document.querySelector('#claimLink');
+      link.href = claimUrl;
+      document.querySelector('#copyClaimLink').onclick = async () => {
+        const output = `${window.location.origin}${claimUrl}`;
+        const status = document.querySelector('#copyStatus');
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(output);
+            status.textContent = 'Claim URL copied.';
+          } else {
+            status.textContent = output;
+          }
+        } catch (err) {
+          status.textContent = output;
+        }
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const { tiers, gifts } = await loadDonationData();
+      renderTierOptions(tiers);
+      renderGiftOptions(gifts);
+      renderReceiptHistory();
+
+      document.querySelector('#patronageForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const tier = findSelectedTier(tiers);
+        const gift = gifts.find((item) => item.id === document.querySelector('#giftSelect').value);
+        const amount = Number(document.querySelector('#supportAmount').value || tier.vox);
+        const record = window.PatronageSpine.createReceipt({
+          supporterName: document.querySelector('#supporterName').value.trim(),
+          supporterEmail: document.querySelector('#supporterEmail').value.trim(),
+          amount,
+          paymentMethod: document.querySelector('#paymentMethod').value,
+          note: document.querySelector('#supportNote').value.trim(),
+          tier,
+          gift
+        });
+        showReceipt(record);
+        renderReceiptHistory();
+      });
+
+      document.querySelector('#clearReceipts').addEventListener('click', () => {
+        window.localStorage.removeItem('patronage.receipts.v1');
+        window.localStorage.removeItem('patronage.claims.v1');
+        document.querySelector('#receiptPanel').classList.add('hidden');
+        renderReceiptHistory();
+      });
+    });
+  </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css">
     <script defer src="/js/app.js"></script>
+    <script defer src="/js/patronage-spine.js"></script>
   </head>
   <body class="bg-white text-gray-900">
     <div id="site-header"></div>
@@ -19,6 +20,7 @@
           <p>The current patronage branch includes the unlock path and receipt flow, but the final media artifact has not been shipped into the public site yet.</p>
           <p class="mt-2">If you redeemed a valid code, your place in the release queue is preserved. The real vault delivery system is tracked separately.</p>
         </div>
+        <div id="receiptContext" class="hidden rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950"></div>
         <a href="/patronage-lab.html" class="inline-flex px-4 py-2 border rounded border-gray-300 hover:border-gray-500">Return to Patronage Lab</a>
       </section>
     </main>
@@ -40,8 +42,14 @@
         return params.get('gift');
       }
 
+      function getReceiptId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('receipt');
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         const giftId = getGiftId();
+        const receiptId = getReceiptId();
         const match = giftId ? GIFT_PACKAGES[giftId] : null;
         if (!match) {
           document.querySelector('#giftTitle').textContent = 'Gift Package Not Found';
@@ -50,6 +58,20 @@
         }
         document.querySelector('#giftTitle').textContent = match.title;
         document.querySelector('#giftDescription').textContent = match.description;
+        if (receiptId) {
+          const receipt = window.PatronageSpine.findReceipt(receiptId);
+          if (receipt) {
+            const panel = document.querySelector('#receiptContext');
+            panel.classList.remove('hidden');
+            panel.innerHTML = `
+              <p><strong>Receipt:</strong> <code>${receipt.receiptId}</code></p>
+              <p><strong>Supporter:</strong> ${receipt.supporterName}</p>
+              <p><strong>Tier:</strong> ${receipt.tier.title}</p>
+              <p><strong>Gift:</strong> ${receipt.gift.title}</p>
+              <p><strong>Issued:</strong> ${new Date(receipt.createdAt).toLocaleString()}</p>
+            `;
+          }
+        }
       });
     </script>
   </body>

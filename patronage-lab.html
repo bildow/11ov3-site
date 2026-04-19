@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css">
     <script defer src="/js/app.js"></script>
+    <script defer src="/js/patronage-spine.js"></script>
   </head>
   <body class="bg-white text-gray-900">
     <div id="site-header"></div>
@@ -30,8 +31,8 @@
           <div class="mt-6 border rounded-lg p-4 bg-white/80">
             <p class="text-xs text-gray-500">Good to know: vox tokens earned on Civitasvox now spendable here. Pick a tier, claim a mythic artifact.</p>
             <div class="mt-3 flex gap-3">
-              <a href="https://thegivingblock.com/" target="_blank" rel="noreferrer" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Give crypto</a>
-              <a href="https://www.ko-fi.com/" target="_blank" rel="noreferrer" class="px-4 py-2 border rounded border-gray-300 hover:border-gray-500">Give fiat</a>
+              <a href="/donate/" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Start patronage flow</a>
+              <a href="https://thegivingblock.com/" target="_blank" rel="noreferrer" class="px-4 py-2 border rounded border-gray-300 hover:border-gray-500">Visit crypto partner</a>
             </div>
           </div>
         </article>
@@ -67,7 +68,7 @@
 
       <section class="space-y-4 border rounded-xl p-6 bg-slate-50">
         <h2 class="text-2xl font-bold">Gift Packages In Preparation</h2>
-        <p class="text-gray-600">After a vox deposit, we can issue a gift code that opens a placeholder package page for the artifact tied to your pledge. The final managed vault flow is still tracked separately.</p>
+        <p class="text-gray-600">After a vox deposit, the prototype donation spine can now issue a browser-local receipt and a redeemable claim link tied to your chosen package. The final managed vault flow is still tracked separately.</p>
         <div class="space-y-4" id="giftList"></div>
         <p class="text-sm text-gray-500">Right now the code check opens a package placeholder, not a finished paywalled media drop. Real issuance and delivery belong to the later gift-vault task.</p>
       </section>
@@ -111,16 +112,26 @@
         const res = await fetch('/data/gifts.json');
         const gifts = await res.json();
         const list = document.querySelector('#giftList');
-        list.innerHTML = gifts.map(gift => `
+        const claims = window.PatronageSpine.getClaims();
+        list.innerHTML = gifts.map(gift => {
+          const issued = claims.find(claim => claim.giftId === gift.id);
+          const claimLink = issued
+            ? `/gift.html?id=${gift.id}&code=${issued.code}&receipt=${issued.receiptId}`
+            : `/gift.html?id=${gift.id}&code=${gift.code}`;
+          const badge = issued
+            ? `<span class="text-[11px] uppercase tracking-widest text-emerald-700">issued on this browser</span>`
+            : `<span class="text-[11px] uppercase tracking-widest text-gray-500">seeded demo package</span>`;
+          return `
           <article class="border rounded-xl p-4 bg-white">
             <div class="flex justify-between items-center">
               <h3 class="text-lg font-semibold">${gift.title}</h3>
-              <span class="text-xs uppercase text-gray-500">${gift.code}</span>
+              ${badge}
             </div>
             <p class="text-sm text-gray-600">${gift.description}</p>
-            <a href="/gift.html?id=${gift.id}&code=${gift.code}" class="text-indigo-600 text-sm underline">Redeem gift</a>
+            <a href="${claimLink}" class="text-indigo-600 text-sm underline">${issued ? 'Open latest issued claim' : 'Open seeded demo claim'}</a>
           </article>
-        `).join('');
+        `;
+        }).join('');
       }
       document.addEventListener('DOMContentLoaded', () => {
         loadTiers();
