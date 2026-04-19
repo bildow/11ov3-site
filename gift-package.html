@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gift Package — 11ov3</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="/js/app.js"></script>
+  </head>
+  <body class="bg-white text-gray-900">
+    <div id="site-header"></div>
+    <main class="max-w-3xl mx-auto px-4 py-16">
+      <section class="border rounded-xl p-6 bg-white shadow space-y-4">
+        <p class="text-sm uppercase tracking-widest text-gray-500">Patronage Lab</p>
+        <h1 id="giftTitle" class="text-3xl font-bold">Gift Package</h1>
+        <p id="giftDescription" class="text-gray-600">This package has been acknowledged, but the artifact is still being prepared.</p>
+        <div class="border rounded-lg bg-slate-50 p-4 text-sm text-gray-700">
+          <p>The current patronage branch includes the unlock path and receipt flow, but the final media artifact has not been shipped into the public site yet.</p>
+          <p class="mt-2">If you redeemed a valid code, your place in the release queue is preserved. The real vault delivery system is tracked separately.</p>
+        </div>
+        <a href="/patronage-lab.html" class="inline-flex px-4 py-2 border rounded border-gray-300 hover:border-gray-500">Return to Patronage Lab</a>
+      </section>
+    </main>
+    <div id="site-footer"></div>
+    <script>
+      const GIFT_PACKAGES = {
+        'bridge-builder': {
+          title: 'Bridge Builder Poem',
+          description: 'Collaborative poem and sketch set. Public branch placeholder until the gift vault ships.'
+        },
+        'conduit-dialogues': {
+          title: 'Conduit Journal',
+          description: 'Narrated journal bundle. Public branch placeholder until the gift vault ships.'
+        }
+      };
+
+      function getGiftId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('gift');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const giftId = getGiftId();
+        const match = giftId ? GIFT_PACKAGES[giftId] : null;
+        if (!match) {
+          document.querySelector('#giftTitle').textContent = 'Gift Package Not Found';
+          document.querySelector('#giftDescription').textContent = 'This package id is not recognized in the current public branch.';
+          return;
+        }
+        document.querySelector('#giftTitle').textContent = match.title;
+        document.querySelector('#giftDescription').textContent = match.description;
+      });
+    </script>
+  </body>
+</html>

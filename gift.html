@@ -12,7 +12,7 @@
     <main class="max-w-4xl mx-auto px-4 py-16">
       <section class="border rounded-xl p-6 bg-white shadow text-center space-y-4">
         <h1 class="text-3xl font-bold">Redeem Your Patronage Gift</h1>
-        <p class="text-gray-600">Use the id and code from your receipt. If they match, the download link appears below. Keep the code private or share only with the intended recipient.</p>
+        <p class="text-gray-600">Use the id and code from your receipt. If they match, the gift package appears below. Keep the code private or share only with the intended recipient.</p>
         <div id="giftStatus" class="text-sm text-gray-500"></div>
         <div id="giftLink" class="hidden mt-4"></div>
       </section>
@@ -40,7 +40,7 @@
         document.querySelector('#giftStatus').textContent = `You unlocked ${match.title}!`;
         const link = document.querySelector('#giftLink');
         link.classList.remove('hidden');
-        link.innerHTML = `<a href="${match.file}" class="px-4 py-2 bg-indigo-600 text-white rounded">Download ${match.title}</a>`;
+        link.innerHTML = `<a href="${match.file}" class="px-4 py-2 bg-indigo-600 text-white rounded">Open ${match.title}</a>`;
       }
       document.addEventListener('DOMContentLoaded', verifyGift);
     </script>
