@@ -14,7 +14,7 @@
     <main class="max-w-4xl mx-auto px-4 py-16">
       <section class="border rounded-xl p-6 bg-white shadow text-center space-y-4">
         <h1 class="text-3xl font-bold">Redeem Your Patronage Gift</h1>
-        <p class="text-gray-600">Use the id and code from your receipt. Locally issued patronage claims redeem here first; seeded demo claims still work as a fallback.</p>
+        <p class="text-gray-600">Use the id, code, and receipt from your issued patronage claim. Redemption now depends on an issued claim record, not the seeded catalog alone.</p>
         <div id="giftStatus" class="text-sm text-gray-500"></div>
         <div id="giftMeta" class="text-sm text-gray-600"></div>
         <div id="giftLink" class="hidden mt-4"></div>
@@ -43,20 +43,18 @@
           return;
         }
 
-        if (issuedClaim) {
-          document.querySelector('#giftStatus').textContent = `Issued claim validated for ${match.title}.`;
-          document.querySelector('#giftMeta').textContent = `Receipt ${issuedClaim.receiptId} • ${issuedClaim.tierTitle} • issued ${new Date(issuedClaim.issuedAt).toLocaleString()}`;
-        } else if (match.code === code) {
-          document.querySelector('#giftStatus').textContent = `Seeded demo claim validated for ${match.title}.`;
-          document.querySelector('#giftMeta').textContent = 'This is a demo fallback claim from the public seed data.';
-        } else {
-          document.querySelector('#giftStatus').textContent = 'Gift not recognized. Ensure your code matches the issued receipt.';
+        if (!issuedClaim) {
+          document.querySelector('#giftStatus').textContent = 'Issued claim not found on this browser. Open the claim link from the receipt that generated it.';
+          document.querySelector('#giftMeta').textContent = 'Seeded catalog entries no longer redeem by themselves.';
           return;
         }
 
+        document.querySelector('#giftStatus').textContent = `Issued claim validated for ${match.title}.`;
+        document.querySelector('#giftMeta').textContent = `Receipt ${issuedClaim.receiptId} • ${issuedClaim.tierTitle} • issued ${new Date(issuedClaim.issuedAt).toLocaleString()}`;
+
         const link = document.querySelector('#giftLink');
         link.classList.remove('hidden');
-        const target = `${match.file}${match.file.includes('?') ? '&' : '?'}receipt=${encodeURIComponent(receipt || issuedClaim?.receiptId || '')}`;
+        const target = `${match.file}${match.file.includes('?') ? '&' : '?'}receipt=${encodeURIComponent(issuedClaim.receiptId)}`;
         link.innerHTML = `<a href="${target}" class="px-4 py-2 bg-indigo-600 text-white rounded">Open ${match.title}</a>`;
       }
       document.addEventListener('DOMContentLoaded', verifyGift);

@@ -24,7 +24,7 @@ Build the first real horizontal slice for patronage:
   - selected gift
   - support channel
 - Stored issued claims locally so `gift.html` can redeem browser-issued links.
-- Updated `gift.html` to validate local issued claims first and seeded demo claims second.
+- Updated `gift.html` to validate local issued claims only.
 - Updated `gift-package.html` to show receipt context when reached from an issued claim.
 - Updated `patronage-lab.html` so the primary CTA points into `/donate/` and the gift list can surface the latest locally issued claim.
 
@@ -32,7 +32,7 @@ Build the first real horizontal slice for patronage:
 
 - This is still a browser-local prototype. Issued receipts and claims only exist on the current device/browser.
 - No server-side persistence, payment processor callback, or canonical donor ledger exists yet.
-- Seeded demo gift codes still exist as fallback behavior and should be removed or gated once managed issuance replaces them.
+- Seeded catalog data still exists as package metadata, but seeded codes are no longer a redeemable fallback path.
 - The actual charity / processor routing remains separate from this local issuance spine.
 
 ## Next Hardening Moves
