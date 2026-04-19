@@ -4,6 +4,10 @@ body {
   color: #111827;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -45,9 +49,7 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  display: none;
   font-size: 0.875rem;
 }
 
@@ -87,7 +89,17 @@ body {
 }
 
 @media (min-width: 768px) {
+  .site-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
   .site-menu-btn {
     display: none;
+  }
+
+  .site-mobile-menu {
+    display: none !important;
   }
 }
