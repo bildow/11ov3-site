@@ -6,8 +6,23 @@ async function inject(selector, url) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`failed to load ${url}`);
     el.innerHTML = await res.text();
+    activateInjectedScripts(el);
   } catch (err) {
     console.error('[11ov3] partial load failed:', err);
+  }
+}
+
+function activateInjectedScripts(root) {
+  const scripts = root.querySelectorAll('script');
+  for (const script of scripts) {
+    const next = document.createElement('script');
+    for (const { name, value } of script.attributes) {
+      next.setAttribute(name, value);
+    }
+    if (script.textContent) {
+      next.textContent = script.textContent;
+    }
+    script.replaceWith(next);
   }
 }
 
