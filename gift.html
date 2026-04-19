@@ -14,7 +14,7 @@
     <main class="max-w-4xl mx-auto px-4 py-16">
       <section class="border rounded-xl p-6 bg-white shadow text-center space-y-4">
         <h1 class="text-3xl font-bold">Redeem Your Patronage Gift</h1>
-        <p class="text-gray-600">Use the id, code, and receipt from your issued patronage claim. Redemption now depends on an issued claim record, not the seeded catalog alone.</p>
+        <p class="text-gray-600">Use the issued patronage claim link. Managed claim tokens verify through the service path first; browser-local issued claims still work on the device that created them.</p>
         <div id="giftStatus" class="text-sm text-gray-500"></div>
         <div id="giftMeta" class="text-sm text-gray-600"></div>
         <div id="giftLink" class="hidden mt-4"></div>
@@ -31,6 +31,23 @@
         const id = getQuery('id');
         const code = getQuery('code');
         const receipt = getQuery('receipt');
+        const claimToken = getQuery('claim');
+        if (claimToken) {
+          try {
+            const verified = await window.PatronageSpine.verifyManagedClaim(claimToken);
+            const claim = verified.claim;
+            document.querySelector('#giftStatus').textContent = `Managed claim validated for ${claim.gift.title}.`;
+            document.querySelector('#giftMeta').textContent = `Receipt ${claim.receiptId} • ${claim.tier.title} • issued ${new Date(claim.createdAt).toLocaleString()} • ${verified.mode}`;
+            const link = document.querySelector('#giftLink');
+            link.classList.remove('hidden');
+            const target = `${claim.gift.file}${claim.gift.file.includes('?') ? '&' : '?'}claim=${encodeURIComponent(claimToken)}&receipt=${encodeURIComponent(claim.receiptId)}`;
+            link.innerHTML = `<a href="${target}" class="px-4 py-2 bg-indigo-600 text-white rounded">Open ${claim.gift.title}</a>`;
+            return;
+          } catch (err) {
+            document.querySelector('#giftStatus').textContent = 'Managed claim could not be verified.';
+            return;
+          }
+        }
         if (!id || !code) {
           document.querySelector('#giftStatus').textContent = 'Missing gift id or code.';
           return;
@@ -44,7 +61,7 @@
         }
 
         if (!issuedClaim) {
-          document.querySelector('#giftStatus').textContent = 'Issued claim not found on this browser. Open the claim link from the receipt that generated it.';
+          document.querySelector('#giftStatus').textContent = 'Issued claim not found on this browser. Open the managed claim link or the local receipt that generated it.';
           document.querySelector('#giftMeta').textContent = 'Seeded catalog entries no longer redeem by themselves.';
           return;
         }

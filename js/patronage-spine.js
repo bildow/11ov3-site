@@ -48,6 +48,26 @@
     return safeRead(CLAIMS_KEY);
   }
 
+  async function createManagedReceipt(input) {
+    const res = await fetch('/.netlify/functions/patronage-claim', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(input)
+    });
+    if (!res.ok) throw new Error('managed claim issue failed');
+    return res.json();
+  }
+
+  async function verifyManagedClaim(token) {
+    const res = await fetch(`/.netlify/functions/patronage-claim?claim=${encodeURIComponent(token)}`, {
+      cache: 'no-cache'
+    });
+    if (!res.ok) throw new Error('managed claim verify failed');
+    return res.json();
+  }
+
   function findClaim({ giftId, code, receiptId }) {
     return getClaims().find((claim) => {
       if (claim.giftId !== giftId) return false;
@@ -103,11 +123,13 @@
   }
 
   window.PatronageSpine = {
+    createManagedReceipt,
     loadJson,
     getReceipts,
     getClaims,
     findClaim,
     findReceipt,
-    createReceipt
+    createReceipt,
+    verifyManagedClaim
   };
 })();

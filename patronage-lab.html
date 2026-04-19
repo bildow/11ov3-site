@@ -68,7 +68,7 @@
 
       <section class="space-y-4 border rounded-xl p-6 bg-slate-50">
         <h2 class="text-2xl font-bold">Gift Packages In Preparation</h2>
-        <p class="text-gray-600">After a vox deposit, the prototype donation spine can now issue a browser-local receipt and a redeemable claim link tied to your chosen package. A package only opens from an issued claim now; the final managed vault flow is still tracked separately.</p>
+        <p class="text-gray-600">After a vox deposit, the prototype donation spine can now issue a redeemable claim link tied to your chosen package. Managed claims use the service path when deployed; browser-local receipts remain as the fallback development mode.</p>
         <div class="space-y-4" id="giftList"></div>
         <p class="text-sm text-gray-500">Right now an issued claim opens a package placeholder, not a finished media drop. Real issuance and delivery belong to the later gift-vault task.</p>
       </section>
@@ -116,10 +116,10 @@
         list.innerHTML = gifts.map(gift => {
           const issued = claims.find(claim => claim.giftId === gift.id);
           const claimLink = issued
-            ? `/gift.html?id=${gift.id}&code=${issued.code}&receipt=${issued.receiptId}`
+            ? (issued.token ? `/gift.html?claim=${issued.token}` : `/gift.html?id=${gift.id}&code=${issued.code}&receipt=${issued.receiptId}`)
             : '/donate/';
           const badge = issued
-            ? `<span class="text-[11px] uppercase tracking-widest text-emerald-700">issued on this browser</span>`
+            ? `<span class="text-[11px] uppercase tracking-widest text-emerald-700">${issued.token ? 'managed claim issued' : 'local claim issued'}</span>`
             : `<span class="text-[11px] uppercase tracking-widest text-amber-700">issue from donate flow</span>`;
           return `
           <article class="border rounded-xl p-4 bg-white">

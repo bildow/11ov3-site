@@ -47,9 +47,15 @@
         return params.get('receipt');
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
+      function getClaimToken() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('claim');
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
         const giftId = getGiftId();
         const receiptId = getReceiptId();
+        const claimToken = getClaimToken();
         const match = giftId ? GIFT_PACKAGES[giftId] : null;
         if (!match) {
           document.querySelector('#giftTitle').textContent = 'Gift Package Not Found';
@@ -58,6 +64,25 @@
         }
         document.querySelector('#giftTitle').textContent = match.title;
         document.querySelector('#giftDescription').textContent = match.description;
+        if (claimToken) {
+          try {
+            const verified = await window.PatronageSpine.verifyManagedClaim(claimToken);
+            const claim = verified.claim;
+            const panel = document.querySelector('#receiptContext');
+            panel.classList.remove('hidden');
+            panel.innerHTML = `
+              <p><strong>Receipt:</strong> <code>${claim.receiptId}</code></p>
+              <p><strong>Supporter:</strong> ${claim.supporterName}</p>
+              <p><strong>Tier:</strong> ${claim.tier.title}</p>
+              <p><strong>Gift:</strong> ${claim.gift.title}</p>
+              <p><strong>Issued:</strong> ${new Date(claim.createdAt).toLocaleString()}</p>
+              <p><strong>Mode:</strong> ${verified.mode}</p>
+            `;
+            return;
+          } catch (err) {
+            document.querySelector('#giftDescription').textContent = 'Managed claim verification failed for this package.';
+          }
+        }
         if (receiptId) {
           const receipt = window.PatronageSpine.findReceipt(receiptId);
           if (receipt) {
